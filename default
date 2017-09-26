@@ -7,6 +7,8 @@ map $sent_http_content_type $expires {
     ~image/                    max;
 }
 
+# Default www subdomain server
+# Currently not used for Ryukyu Social
 server {
     listen 80 default_server;
     listen [::]:80 default_server;
@@ -23,6 +25,7 @@ server {
     }
 }
 
+# Forward http to https
 server {
     listen 80;
     listen [::]:80;
@@ -30,6 +33,7 @@ server {
     return 301 https://$server_name$request_uri;
 }
 
+# Forward http to https
 server {
     listen 80;
     listen [::]:80;
@@ -37,6 +41,7 @@ server {
     return 301 https://$server_name$request_uri;
 }
 
+# Forward http to https
 server {
     listen 80;
     listen [::]:80;
@@ -44,6 +49,7 @@ server {
     return 301 https://$server_name$request_uri;
 }
 
+# HTTPs server setup for production frontend
 server {
    # SSL configuration
 
@@ -52,12 +58,14 @@ server {
 
    expires $expires;
 
+   # snippets is folder located in /etc/nginx
+   # create symbolic links (.conf files) pointing to your ssl certificates
    include snippets/ssl-ryukyu-social-ui.cleverword.com.conf;
    include snippets/ssl-params.conf;
 
    server_name ryukyu-social-ui.cleverword.com;
 
-   root /home/kenle/public/ryukyu_social_ui_prod;
+   root /home/riv/frontend/ryukyu_social_ui_prod;
 
    index index.html;
 
@@ -65,11 +73,13 @@ server {
         allow all;
    }
 
+   # Special setup for Angular JS apps, one page app setup
    location / {
 	try_files $uri $uri/ /index.html;
    }
 }
 
+# HTTPs server setup for development frontend
 server {
    # SSL configuration
 
@@ -83,7 +93,7 @@ server {
 
    server_name ryukyu-social-ui-dev.cleverword.com;
 
-   root /home/kenle/public/ryukyu_social_ui_dev;
+   root /home/riv/frontend/ryukyu_social_ui_dev;
 
    index index.html;
 
@@ -96,6 +106,7 @@ server {
    }
 }
 
+# HTTPs server setup for production backend
 server {
    # SSL configuration
 
@@ -109,7 +120,9 @@ server {
 
    server_name ryukyu-social.cleverword.com;
 
-   root /home/kenle/public/ryukyu_social_frontend;
+   # This is the test/admin frontend, not to be confused with the Ryukyu UI
+   # Not really needed..
+   root /home/riv/frontend/ryukyu_social_frontend;
 
    index index.html;
 
@@ -123,6 +136,7 @@ server {
         auth_basic_user_file /etc/nginx/.htpasswd;
    }
 
+   # Forwarding to the correct NodeJS app in the backend
    location /users_service/api {
         rewrite /users_service/api/(.*) /$1  break;
         proxy_pass http://127.0.0.1:5000;
@@ -133,6 +147,7 @@ server {
         proxy_cache_bypass $http_upgrade;
    }
 
+   # For test frontend, single page app angularjs
    location /users_service {
 	try_files $uri $uri/ /users_service/index.html;
    }
@@ -249,6 +264,7 @@ server {
    }
 }
 
+# HTTPs server setup for development backend
 server {
    # SSL configuration
 
@@ -262,7 +278,8 @@ server {
 
    server_name ryukyu-social-dev.cleverword.com;
 
-   root /home/kenle/public/ryukyu_social_frontend_dev;
+   # Development test UI, not to be confused with actual Ryukyu UI
+   root /home/riv/frontend/ryukyu_social_frontend_dev;
 
    index index.html;
 
