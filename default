@@ -25,7 +25,8 @@ server {
     }
 }
 
-# Forward http to https
+# Forward http to https for ryukyu-social subdomain
+# For example, if the user types http://ryukyu-social.cleverword.com it will redirect to https://ryukyu-so....
 server {
     listen 80;
     listen [::]:80;
@@ -33,7 +34,7 @@ server {
     return 301 https://$server_name$request_uri;
 }
 
-# Forward http to https
+# Forward http to https for ryukyu-social-dev subdomain
 server {
     listen 80;
     listen [::]:80;
@@ -41,11 +42,19 @@ server {
     return 301 https://$server_name$request_uri;
 }
 
-# Forward http to https
+# Forward http to https for ryukyu-social-ui subdomain
 server {
     listen 80;
     listen [::]:80;
     server_name ryukyu-social-ui.cleverword.com;
+    return 301 https://$server_name$request_uri;
+}
+
+# Forward http to https for ryukyu-social-ui-devsubdomain
+server {
+    listen 80;
+    listen [::]:80;
+    server_name ryukyu-social-ui-dev.cleverword.com;
     return 301 https://$server_name$request_uri;
 }
 
