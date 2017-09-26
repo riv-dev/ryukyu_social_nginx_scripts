@@ -1,4 +1,6 @@
 # Expires map
+# Turn off caching for html, css
+# Leave caching for images
 map $sent_http_content_type $expires {
     default                    off;
     text/html                  epoch;
