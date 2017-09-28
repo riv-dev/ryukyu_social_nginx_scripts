@@ -230,6 +230,16 @@ server {
         proxy_set_header Host $host;
         proxy_cache_bypass $http_upgrade;
    }
+   
+   location /groups_service/api {
+        rewrite /groups_service/api/(.*) /$1  break;
+        proxy_pass http://127.0.0.1:5008;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+   }
 
    location /code_checker_service/api {
         rewrite /code_checker_service/api/(.*) /$1  break;
@@ -367,6 +377,16 @@ server {
    location /files_service/api {
         rewrite /files_service/api/(.*) /$1  break;
         proxy_pass http://127.0.0.1:8006;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+   }
+   
+   location /groups_service/api {
+        rewrite /groups_service/api/(.*) /$1  break;
+        proxy_pass http://127.0.0.1:8008;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
